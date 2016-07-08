@@ -113,7 +113,7 @@ ConsoleWebLoad [command] [config]
                 ShowNotFound(result, NotFoundType.Args);
             }
             var request = new Requset(Config.TestUrl, Config.TaskSize);
-            request.Single();
+            request.Single().Wait();
         }
 
         static void ExcuteLoop(CommandResult result)

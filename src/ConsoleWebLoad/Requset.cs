@@ -4,37 +4,42 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using System.Collections.Concurrent;
+using System.Net.Http;
 
 namespace ConsoleWebLoad
 {
     public class Requset
     {
 
-        public Requset(string url,int taskSize)
+        public Requset(string url, int taskSize)
         {
             this._url = url;
-            if(taskSize > 1)
+            if (taskSize > 1)
             {
                 this.TaskSize = taskSize;
             }
-            TimeCosts = new Queue<long>(TaskSize);
+
+            TimeCosts = new ConcurrentQueue<long>();
         }
         private string _url;
         private int TaskSize = 10000;
-        private Queue<long> TimeCosts ;
+        private ConcurrentQueue<long> TimeCosts;
+        //HttpClient client = new HttpClient();
 
-        private long DoRequest()
+        private async Task<long> DoRequest()
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
             try
             {
+                //await client.GetAsync(_url);
                 HttpWebRequest wr = HttpWebRequest.CreateHttp(_url);
-                wr.GetResponseAsync().GetAwaiter().GetResult();//同步访问
+                var t = await wr.GetResponseAsync();
             }
             catch
             {
-                
+
             }
             sw.Stop();
             TimeCosts.Enqueue(sw.ElapsedMilliseconds);
@@ -47,11 +52,16 @@ namespace ConsoleWebLoad
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            var r = Parallel.For(0, TaskSize, i => { Single(i); });//0 ~ 9999 = 10000
+            var tasks = new Task[TaskSize];
+            for (int i = 0; i < TaskSize; i++)
+            {
+                tasks[i] = Single(i);
+            }
+            Task.WaitAll(tasks);
             sw.Stop();
             Console.WriteLine($"Task Queue excuted in {sw.ElapsedMilliseconds}ms");
             Console.WriteLine($"avg page time: \t{ sw.ElapsedMilliseconds / TaskSize }ms");
-            if(TimeCosts.Count == 0)
+            if (TimeCosts.Count == 0)
             {
                 Console.WriteLine($"tasks seems not work");
             }
@@ -59,22 +69,53 @@ namespace ConsoleWebLoad
             {
                 Console.WriteLine($"peer request avg page time:\t{ TimeCosts.Sum() } / {TimeCosts.Count } = {  ((double)TimeCosts.Sum()) / ((double)TimeCosts.Count) }ms");
             }
-            
+
+        }
+
+        public void l()
+        {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
+            List<Task> tasks;
+            int queueSize = 100;
+            int index = 0;
+            for (int i = 0; i < TaskSize / queueSize; i++)
+            {
+                tasks = new List<Task>();
+                for (int j = 0; j < queueSize; j++)
+                {
+                    tasks.Add(Single(index));
+                    index++;
+                }
+                Task.WaitAll(tasks.ToArray());
+            }
+
+            tasks = new List<Task>();
+            for (int j = 0; j < TaskSize % queueSize; j++)
+            {
+                tasks.Add(Single(index));
+                index++;
+            }
+
+            Task.WaitAll(tasks.ToArray());
+
         }
         /// <summary>
         /// 单次访问
         /// </summary>
         /// <param name="index">任务索引</param>
-        public void Single()
+        public async Task Single()
         {
-            var time = DoRequest();
-            this.TimeCosts.Dequeue();// 从 列表中删除
+            var time = await DoRequest();
+            long item;
+            TimeCosts.TryDequeue(out item);
             Console.WriteLine($"Taks (Single)\tCost { time }ms");
         }
 
-        private void Single(int index = 0)
+        private async Task Single(int index)
         {
-            var time = DoRequest();
+            var time = await DoRequest();
             Console.WriteLine($"Taks {index.ToString().PadRight(4)}\tCost { time }ms");
         }
     }
