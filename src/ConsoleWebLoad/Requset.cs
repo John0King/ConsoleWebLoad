@@ -47,7 +47,7 @@ namespace ConsoleWebLoad
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            var r = Parallel.For(1, TaskSize, i => { Single(i); });
+            var r = Parallel.For(0, TaskSize, i => { Single(i); });//0 ~ 9999 = 10000
             sw.Stop();
             Console.WriteLine($"Task Queue excuted in {sw.ElapsedMilliseconds}ms");
             Console.WriteLine($"avg page time: \t{ sw.ElapsedMilliseconds / TaskSize }ms");
@@ -57,7 +57,7 @@ namespace ConsoleWebLoad
             }
             else
             {
-                Console.WriteLine($"peer request avg page time:\t{ TimeCosts.Sum() / TimeCosts.Count }ms");
+                Console.WriteLine($"peer request avg page time:\t{ TimeCosts.Sum() } / {TimeCosts.Count } = {  ((double)TimeCosts.Sum()) / ((double)TimeCosts.Count) }ms");
             }
             
         }
@@ -65,10 +65,16 @@ namespace ConsoleWebLoad
         /// 单次访问
         /// </summary>
         /// <param name="index">任务索引</param>
-        public void Single(int index = 0)
+        public void Single()
         {
             var time = DoRequest();
             this.TimeCosts.Dequeue();// 从 列表中删除
+            Console.WriteLine($"Taks (Single)\tCost { time }ms");
+        }
+
+        private void Single(int index = 0)
+        {
+            var time = DoRequest();
             Console.WriteLine($"Taks {index.ToString().PadRight(4)}\tCost { time }ms");
         }
     }
