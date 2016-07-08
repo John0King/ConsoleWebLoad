@@ -9,6 +9,9 @@ namespace ConsoleWebLoad
     {
         public static void Main(string[] args)
         {
+            var R = new CommandParser(args).Parser();
+            CommandExecutor.ExcuteCommand(R);
         }
+
     }
 }
