@@ -7,10 +7,10 @@ using Newtonsoft.Json;
 
 namespace ConsoleWebLoad
 {
-    public class CommandParser
+    public class CommandParser1
     {
         private string[] args;
-        public CommandParser(string[] args)
+        public CommandParser1(string[] args)
         {
             this.args = args;
         }

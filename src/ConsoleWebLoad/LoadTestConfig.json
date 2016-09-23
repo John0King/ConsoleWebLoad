@@ -1,4 +1,4 @@
 ﻿{
-  "testUrl": "http://localhost:5000",
-  "taskSize": 10000
+  "testUrl": "http://localhost:11955/",
+  "taskSize": 2000
 }
