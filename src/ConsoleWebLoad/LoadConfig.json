@@ -1,7 +1,9 @@
 ﻿{
   "TestUrls": [
+    "http://www.web0531.com/marketing/",
+    "http://www.web0531.com/weixin.html",
     "http://www.web0531.com"
   ],
   "TaskSize": 40,
-  "TestSize": 2000
+  "TestCount": 20
 }

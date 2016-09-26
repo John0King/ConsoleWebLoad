@@ -11,12 +11,11 @@ namespace ConsoleWebLoad
     {
         public static void Main(string[] args)
         {
-            var R = new CommandParser1(args).Parser();
-            CommandExecutor.ExcuteCommand(R);
-#if Real
+
+
             var CmdResult = CommandParser.CommandParser.Parse(args);
             CommandParser.CommandExecutor.Execute(CmdResult);
-#endif
+
         }
 
     }

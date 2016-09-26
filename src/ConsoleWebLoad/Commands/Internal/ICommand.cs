@@ -6,10 +6,15 @@ using System.Threading.Tasks;
 
 namespace ConsoleWebLoad.Commands.Internal
 {
-    interface ICommand
+    public interface ICommand
     {
         string CommandName { get; }
         IList<IOption> Options { get;  }
-        bool Execute(IEnumerable<OptionResult> options);
+        /// <summary>
+        /// 执行
+        /// </summary>
+        /// <param name="options">key 是 option 名字， value 是 option 的值</param>
+        /// <returns></returns>
+        bool Execute(Dictionary<string,string> options);
     }
 }

@@ -11,9 +11,9 @@ using ConsoleWebLoad.LoadRunner;
 
 namespace ConsoleWebLoad.Commands
 {
-    public class RunCommand : ICommand
+    public class LoopCommand : ICommand
     {
-        public RunCommand()
+        public LoopCommand()
         {
             Options = new List<IOption>();
             var o = new CommandOption();
@@ -23,7 +23,7 @@ namespace ConsoleWebLoad.Commands
             Options.Add(o);
            
         }
-        public string CommandName { get; } = "Run";
+        public string CommandName { get; } = "Loop";
         public IList<IOption> Options{ get; }
 
         private string ConfigFilePath = Path.Combine( Directory.GetCurrentDirectory(),"LoadConfig.json") ;
@@ -44,8 +44,9 @@ namespace ConsoleWebLoad.Commands
 
             var config = JsonConvert.DeserializeObject<ConfigModel>(File.ReadAllText(ConfigFilePath));
 
-            var testRunner = new TestRunner(config.TestUrls);
-            var T = testRunner.Run().GetAwaiter().GetResult();
+            var looper = new LoopRunner(config.TaskSize,config.TestCount,config.TestUrls);
+            var T = looper.Run();
+            T.Wait();
 
             return true;
         }

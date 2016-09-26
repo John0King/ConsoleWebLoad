@@ -9,9 +9,9 @@ namespace ConsoleWebLoad.CommandParser
     {
         public CommandResult()
         {
-            options = new List<OptionResult>();
+            options = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         }
         public string CommnadName { get; internal set; }
-        public IEnumerable<OptionResult> options { get; internal set; }
+        public Dictionary<string,string> options { get; internal set; }
     }
 }
