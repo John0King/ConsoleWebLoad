@@ -45,8 +45,7 @@ namespace ConsoleWebLoad.Commands
             var config = JsonConvert.DeserializeObject<ConfigModel>(File.ReadAllText(ConfigFilePath));
 
             var looper = new LoopRunner(config.TaskSize,config.TestCount,config.TestUrls);
-            var T = looper.Run();
-            T.Wait();
+            looper.Run().GetAwaiter().GetResult();
 
             return true;
         }
