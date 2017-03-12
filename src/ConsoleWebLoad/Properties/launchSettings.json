@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ConsoleWebLoad": {
+      "commandName": "Project",
+      "commandLineArgs": "loop"
+    }
+  }
+}

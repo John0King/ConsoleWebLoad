@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using System.Reflection;
-using System.Reflection.Metadata;
 using ConsoleWebLoad.Commands;
 
 namespace ConsoleWebLoad.CommandParser
