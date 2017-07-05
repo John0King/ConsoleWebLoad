@@ -11,12 +11,14 @@ namespace ConsoleWebLoad.LoadRunner
     public class QueryRunner
     {
         public string _url { get;private set; }
-        public QueryRunner(string Url)
+        private object locker = new object();
+        private readonly HttpClient _client;
+        public QueryRunner(string Url,HttpClient client)
         {
             _url = Url;
+            _client = client;
         }
-        private static HttpClient client = new HttpClient();
-        private object locker = new object();
+        
 
         public async Task<QueryResult> Run()
         {
@@ -25,11 +27,11 @@ namespace ConsoleWebLoad.LoadRunner
             timer.Start();
             var isSuccess = await DoRequest();
             timer.Stop();
-            lock (locker)
-            {
+            //lock (locker)
+            //{
                 string txt = isSuccess ? "Success" : "Faild";
                 Console.WriteLine($" Query<{index}>\t{txt}\t\tTimeCost:{timer.ElapsedMilliseconds}ms\t\turl:{_url}");
-            }
+            //}
             
             return  new QueryResult()
             {
@@ -41,7 +43,7 @@ namespace ConsoleWebLoad.LoadRunner
         {
             try
             {
-                await client.GetStringAsync(_url);
+                await _client.GetStringAsync(_url);
                 return true;
             }
             catch

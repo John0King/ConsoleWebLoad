@@ -8,6 +8,7 @@ using System.IO;
 using Newtonsoft.Json;
 using ConsoleWebLoad.Config;
 using ConsoleWebLoad.LoadRunner;
+using System.Net.Http;
 
 namespace ConsoleWebLoad.Commands
 {
@@ -43,9 +44,13 @@ namespace ConsoleWebLoad.Commands
             }
 
             var config = JsonConvert.DeserializeObject<ConfigModel>(File.ReadAllText(ConfigFilePath));
-
-            var testRunner = new TestRunner(config.TestUrls);
-            var T = testRunner.Run().GetAwaiter().GetResult();
+            using(var client = new HttpClient())
+            {
+                var testRunner = new TestRunner(config.TestUrls,client);
+                var T = testRunner.Run().GetAwaiter().GetResult();
+            }
+            
+            
 
             return true;
         }

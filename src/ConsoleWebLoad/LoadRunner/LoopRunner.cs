@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Diagnostics;
+using System.Net.Http;
 
 namespace ConsoleWebLoad.LoadRunner
 {
@@ -25,15 +26,15 @@ namespace ConsoleWebLoad.LoadRunner
             _TestUrls = TestUrls;
         }
 
-        public async Task Run()
+        public void Run()
         {
             Stopwatch timer = new Stopwatch();
             timer.Start();
-            await RunTest();
+            RunTest();
             timer.Stop();
             Console.BackgroundColor = ConsoleColor.DarkCyan;
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("Result:>>>>>>>>>>>");
+            Console.WriteLine("Result:>>>>>>>>>>>Real time usage<<<<<");
             Console.ResetColor();
             Console.WriteLine($"All Test use Time:{timer.Elapsed.TotalMilliseconds.ToString("f3")}ms");
             Console.WriteLine($"Test Count:{Counter.TestCounter} times\t\tQuery Count:{Counter.QueryCounter} times");
@@ -41,7 +42,7 @@ namespace ConsoleWebLoad.LoadRunner
             Console.WriteLine($"Peer Test time:{(timer.Elapsed.TotalMilliseconds / Counter.TestCounter).ToString("f3")}ms");
             Console.BackgroundColor = ConsoleColor.DarkCyan;
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("Result:<<<<<<<<<<<");
+            Console.WriteLine("Result:<<<<<<<<<<< totial time usage >>>>>>");
             Console.ResetColor();
             var totalMS = Counter.TestResults.Sum(t => t.Timeuse.TotalMilliseconds);
             var totalCount = Counter.TestResults.Sum(t => t.FaildCount + t.SuccessCount);
@@ -53,19 +54,24 @@ namespace ConsoleWebLoad.LoadRunner
 
         }
         private TestResult reslut = new TestResult();
-        private async Task RunTest()
+        private void RunTest()
         {
-            await Task.FromResult(0);
             List<Task> tasks = new List<Task>();
             for(var i = 0; i < _taskSize; i++)
             {
-                tasks.Add(InvokeTest());
+                tasks.Add(Task.Run(async () =>
+               {
+                   using (var client = new HttpClient())
+                   {
+                       await InvokeTest(client);
+                   }
+               }));
                 
             }
             Task.WaitAll(tasks.ToArray());
         }
 
-        private async Task InvokeTest()
+        private async Task InvokeTest(HttpClient client)
         {
             while (true)
             {
@@ -73,7 +79,7 @@ namespace ConsoleWebLoad.LoadRunner
                 {
                     break;
                 }
-                var test = new TestRunner(_TestUrls);
+                var test = new TestRunner(_TestUrls,client);
                 var t = await test.Run();
             }
             
