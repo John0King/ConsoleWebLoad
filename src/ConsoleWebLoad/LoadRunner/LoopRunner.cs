@@ -10,9 +10,9 @@ namespace ConsoleWebLoad.LoadRunner
 {
     public class LoopRunner
     {
-        private int _taskSize;
-        private int _testCount;
-        private string[] _TestUrls;
+        private readonly int _taskSize;
+        private readonly int _testCount;
+        private readonly string[] _TestUrls;
 
         /// <summary>
         /// 初始化 循环访问器
@@ -32,28 +32,32 @@ namespace ConsoleWebLoad.LoadRunner
             timer.Start();
             RunTest();
             timer.Stop();
-            Console.BackgroundColor = ConsoleColor.DarkCyan;
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("Result:>>>>>>>>>>>Real time usage<<<<<");
-            Console.ResetColor();
-            Console.WriteLine($"All Test use Time:{timer.Elapsed.TotalMilliseconds.ToString("f3")}ms");
-            Console.WriteLine($"Test Count:{Counter.TestCounter} times\t\tQuery Count:{Counter.QueryCounter} times");
-            Console.WriteLine($"Peer Page time:{ (timer.Elapsed.TotalMilliseconds / Counter.QueryCounter).ToString("f3") }ms");
-            Console.WriteLine($"Peer Test time:{(timer.Elapsed.TotalMilliseconds / Counter.TestCounter).ToString("f3")}ms");
-            Console.BackgroundColor = ConsoleColor.DarkCyan;
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("Result:<<<<<<<<<<< totial time usage >>>>>>");
-            Console.ResetColor();
-            var totalMS = Counter.TestResults.Sum(t => t.Timeuse.TotalMilliseconds);
-            var totalCount = Counter.TestResults.Sum(t => t.FaildCount + t.SuccessCount);
-            Console.WriteLine($"All Test use Time:{totalMS.ToString("f3")}ms");
-            Console.WriteLine($"Peer Page time:{ (totalMS / totalCount).ToString("f3") }ms");
-            Console.WriteLine($"Peer Test time:{(totalMS / totalCount).ToString("f3")}ms");
+            Out.FinalAction = () =>
+            {
+                Console.BackgroundColor = ConsoleColor.DarkCyan;
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("Result:>>>>>>>>>>>Real time usage<<<<<");
+                Console.ResetColor();
+                Console.WriteLine($"All Test use Time:{timer.Elapsed.TotalMilliseconds.ToString("f3")}ms");
+                Console.WriteLine($"Test Count:{Counter.TestCounter} times\t\tQuery Count:{Counter.QueryCounter} times");
+                Console.WriteLine($"Peer Page time:{ (timer.Elapsed.TotalMilliseconds / Counter.QueryCounter).ToString("f3") }ms");
+                Console.WriteLine($"Peer Test time:{(timer.Elapsed.TotalMilliseconds / Counter.TestCounter).ToString("f3")}ms");
+                Console.BackgroundColor = ConsoleColor.DarkCyan;
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("Result:<<<<<<<<<<< totial time usage >>>>>>");
+                Console.ResetColor();
+                var totalMS = Counter.TestResults.Sum(t => t.Timeuse.TotalMilliseconds);
+                var totalCount = Counter.TestResults.Sum(t => t.FaildCount + t.SuccessCount);
+                Console.WriteLine($"All Test use Time:{totalMS.ToString("f3")}ms");
+                Console.WriteLine($"Peer Page time:{ (totalMS / totalCount).ToString("f3") }ms");
+                Console.WriteLine($"Peer Test time:{(totalMS / totalCount).ToString("f3")}ms");
 
-            Console.Write($"Error:{Counter.TestResults.Sum(t => t.FaildCount)}");
+                Console.Write($"Error:{Counter.TestResults.Sum(t => t.FaildCount)}");
+            };
+            
 
         }
-        private TestResult reslut = new TestResult();
+        private readonly TestResult reslut = new TestResult();
         private void RunTest()
         {
             List<Task> tasks = new List<Task>();

@@ -1,9 +1,9 @@
 ﻿{
   "TestUrls": [
-    "http://www.web0531.com/marketing/",
-    "http://www.web0531.com/weixin.html",
-    "http://www.web0531.com"
+    "http://www.jx03.com/",
+    "http://www.jx03.com/Course",
+    "http://www.jx03.com/Exam/ShiJuanFilter/37-119-0"
   ],
   "TaskSize": 40,
-  "TestCount": 20
+  "TestCount": 2000
 }
