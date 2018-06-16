@@ -17,8 +17,10 @@ namespace ConsoleWebLoad.Commands
         public RunCommand()
         {
             Options = new List<IOption>();
-            var o = new CommandOption();
-            o.OptionName = "ConfigFile";
+            var o = new CommandOption
+            {
+                OptionName = "ConfigFile"
+            };
             o.Tags.Add("-c");
             o.Tags.Add("--configfile");
             Options.Add(o);

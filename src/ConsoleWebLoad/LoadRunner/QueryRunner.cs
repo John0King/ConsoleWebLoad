@@ -10,8 +10,8 @@ namespace ConsoleWebLoad.LoadRunner
 {
     public class QueryRunner
     {
-        public string _url { get;private set; }
-        private object locker = new object();
+        public string _url { get; }
+        private readonly object locker = new object();
         private readonly HttpClient _client;
         public QueryRunner(string Url,HttpClient client)
         {
@@ -25,14 +25,17 @@ namespace ConsoleWebLoad.LoadRunner
             int index = Interlocked.Increment(ref Counter.QueryCounter);
             Stopwatch timer = new Stopwatch();
             timer.Start();
-            var isSuccess = await DoRequest();
+            var isSuccess = await DoRequest().ConfigureAwait(false);
             timer.Stop();
             //lock (locker)
             //{
-                string txt = isSuccess ? "Success" : "Faild";
-                Console.WriteLine($" Query<{index}>\t{txt}\t\tTimeCost:{timer.ElapsedMilliseconds}ms\t\turl:{_url}");
+            string txt = isSuccess ? "Success" : "Faild";
+                //Console.WriteLine($" Query<{index}>\t{txt}\t\tTimeCost:{timer.ElapsedMilliseconds}ms\t\turl:{_url}");
+            Out.Outputer.AddMessage(new Outputers.OutputMessage(Outputers.MessageLeve.Info,
+                $" Query<{index}> ",
+                $"\t{txt}\t\tTimeCost:{timer.ElapsedMilliseconds}ms\t\turl:{_url}"));
             //}
-            
+
             return  new QueryResult()
             {
                 Success = isSuccess,
@@ -43,7 +46,7 @@ namespace ConsoleWebLoad.LoadRunner
         {
             try
             {
-                await _client.GetStringAsync(_url);
+                await _client.GetStringAsync(_url).ConfigureAwait(false);
                 return true;
             }
             catch
