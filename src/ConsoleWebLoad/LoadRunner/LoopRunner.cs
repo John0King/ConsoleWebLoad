@@ -67,7 +67,7 @@ namespace ConsoleWebLoad.LoadRunner
                {
                    using (var client = new HttpClient())
                    {
-                       await InvokeTest(client);
+                       await InvokeTest(client).ConfigureAwait(false);
                    }
                }));
                 
@@ -84,7 +84,7 @@ namespace ConsoleWebLoad.LoadRunner
                     break;
                 }
                 var test = new TestRunner(_TestUrls,client);
-                var t = await test.Run();
+                var t = await test.Run().ConfigureAwait(false);
             }
             
         }

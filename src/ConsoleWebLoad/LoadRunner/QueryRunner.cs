@@ -25,7 +25,7 @@ namespace ConsoleWebLoad.LoadRunner
             int index = Interlocked.Increment(ref Counter.QueryCounter);
             Stopwatch timer = new Stopwatch();
             timer.Start();
-            var isSuccess = await DoRequest();
+            var isSuccess = await DoRequest().ConfigureAwait(false);
             timer.Stop();
             //lock (locker)
             //{
@@ -46,7 +46,7 @@ namespace ConsoleWebLoad.LoadRunner
         {
             try
             {
-                await _client.GetStringAsync(_url);
+                await _client.GetStringAsync(_url).ConfigureAwait(false);
                 return true;
             }
             catch

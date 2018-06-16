@@ -26,7 +26,7 @@ namespace ConsoleWebLoad.LoadRunner
             foreach(var url in _urls)
             {
                 var q = new QueryRunner(url,_client);
-                var QResult = await q.Run();
+                var QResult = await q.Run().ConfigureAwait(false);
                 r.Timeuse += QResult.Timeuse;
                 if (QResult.Success)
                 {
