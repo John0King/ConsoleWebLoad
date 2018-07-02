@@ -12,7 +12,7 @@ namespace ConsoleWebLoad.Outputers
         void StartOutput();
         void Stop();
 
-        Task WaitAsync(CancellationToken cancellationToken = default);
+        ValueTask WaitAsync(CancellationToken cancellationToken = default);
             
 
     }

@@ -19,7 +19,7 @@ namespace ConsoleWebLoad.LoadRunner
         }
         
 
-        public async Task<TestResult> Run()
+        public async ValueTask<TestResult> Run()
         {
             int index = Interlocked.Increment(ref Counter.TestCounter);
             var r = new TestResult();

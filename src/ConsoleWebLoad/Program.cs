@@ -15,7 +15,7 @@ namespace ConsoleWebLoad
 
             Out.Outputer.StartOutput();
             var CmdResult = CommandParser.CommandParser.Parse(args);
-            CommandParser.CommandExecutor.Execute(CmdResult);
+            CommandExecutor.Execute(CmdResult);
 
             await Out.Outputer.WaitAsync();
             if(Out.FinalAction != null)

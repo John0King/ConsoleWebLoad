@@ -67,6 +67,7 @@ namespace ConsoleWebLoad.LoadRunner
                {
                    using (var client = new HttpClient())
                    {
+                       client.Timeout = TimeSpan.FromSeconds(30);
                        await InvokeTest(client).ConfigureAwait(false);
                    }
                }));
@@ -75,7 +76,7 @@ namespace ConsoleWebLoad.LoadRunner
             Task.WaitAll(tasks.ToArray());
         }
 
-        private async Task InvokeTest(HttpClient client)
+        private async ValueTask InvokeTest(HttpClient client)
         {
             while (true)
             {

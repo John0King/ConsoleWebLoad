@@ -51,13 +51,13 @@ namespace ConsoleWebLoad.Outputers
             }, _tokenSource.Token);
         }
 
-        private Task<bool> WriteMessageAsync()
+        private ValueTask<bool> WriteMessageAsync()
         {
             if (_messagePool.TryDequeue(out var message))
             {
                 if (message == null)
                 {
-                    return Task.FromResult(true);
+                    return new ValueTask<bool>(true);
                 }
                 switch (message.Leve)
                 {
@@ -93,9 +93,9 @@ namespace ConsoleWebLoad.Outputers
                             break;
                         }
                 }
-                return Task.FromResult(true);
+                return new ValueTask<bool>(true);
             }
-            return Task.FromResult(false);
+            return new ValueTask<bool>(false);
         }
 
         public void Stop()
@@ -103,7 +103,7 @@ namespace ConsoleWebLoad.Outputers
             Console.ResetColor();
             _tokenSource?.Cancel();
         }
-        public async Task WaitAsync(CancellationToken cancellationToken = default)
+        public async ValueTask WaitAsync(CancellationToken cancellationToken = default)
         {
             _isEnd = true;
             cancellationToken.Register(() =>

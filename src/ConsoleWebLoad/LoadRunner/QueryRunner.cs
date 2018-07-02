@@ -20,7 +20,7 @@ namespace ConsoleWebLoad.LoadRunner
         }
         
 
-        public async Task<QueryResult> Run()
+        public async ValueTask<QueryResult> Run()
         {
             int index = Interlocked.Increment(ref Counter.QueryCounter);
             Stopwatch timer = new Stopwatch();
@@ -42,7 +42,7 @@ namespace ConsoleWebLoad.LoadRunner
                 Timeuse = timer.Elapsed
             };
         }
-        private async Task<bool> DoRequest()
+        private async ValueTask<bool> DoRequest()
         {
             try
             {
