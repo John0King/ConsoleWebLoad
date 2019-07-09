@@ -85,7 +85,7 @@ namespace ConsoleWebLoad.LoadRunner
                     break;
                 }
                 var test = new TestRunner(_TestUrls,client);
-                var t = await test.Run().ConfigureAwait(false);
+                _ = await test.Run().ConfigureAwait(false);
             }
             
         }
