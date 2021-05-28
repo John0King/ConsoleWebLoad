@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.CommandLineUtils;
-
+using System.CommandLine;
 using ConsoleWebLoad.CommandParser;
 
 namespace ConsoleWebLoad
