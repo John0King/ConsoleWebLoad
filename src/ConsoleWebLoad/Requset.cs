@@ -10,7 +10,7 @@ using System.Threading;
 
 namespace ConsoleWebLoad
 {
-    public class Requset
+    public struct Requset
     {
 
         public Requset(string url, int taskSize)
@@ -20,14 +20,20 @@ namespace ConsoleWebLoad
             {
                 this.TaskSize = taskSize;
             }
+            else
+            {
+                TaskSize = 10000;
+            }
 
             TimeCosts = new ConcurrentQueue<long>();
+            client = new HttpClient();
+            TaskIndwx = 0;
         }
         private string _url;
-        private int TaskSize = 10000;
+        private int TaskSize;// = 10000;
         private ConcurrentQueue<long> TimeCosts;
-        private HttpClient client = new HttpClient();
-        private volatile int TaskIndwx = 0;
+        private HttpClient client;//= new HttpClient();
+        private volatile int TaskIndwx;//= 0;
         private async Task<long> DoRequest()
         {
             Stopwatch sw = new Stopwatch();

@@ -8,15 +8,17 @@ using System.Threading.Tasks;
 
 namespace ConsoleWebLoad.LoadRunner
 {
-    public class QueryRunner
+    public struct QueryRunner
     {
         public string _url { get; }
-        private readonly object locker = new object();
+        private readonly object locker;//= new object();
         private readonly HttpClient _client;
         public QueryRunner(string Url,HttpClient client)
         {
             _url = Url;
             _client = client;
+
+            locker = new object();
         }
         
 

@@ -8,7 +8,7 @@ using System.Net.Http;
 
 namespace ConsoleWebLoad.LoadRunner
 {
-    public class LoopRunner
+    public struct LoopRunner
     {
         private readonly int _taskSize;
         private readonly int _testCount;
@@ -24,6 +24,7 @@ namespace ConsoleWebLoad.LoadRunner
             _taskSize = TaskSize;
             _testCount = TestCount;
             _TestUrls = TestUrls;
+            this.reslut = new TestResult();
         }
 
         public void Run()
@@ -57,12 +58,13 @@ namespace ConsoleWebLoad.LoadRunner
             
 
         }
-        private readonly TestResult reslut = new TestResult();
+        private readonly TestResult reslut;//= new TestResult();
         private void RunTest()
         {
             List<Task> tasks = new List<Task>();
             for(var i = 0; i < _taskSize; i++)
             {
+                var InvokeTest = new Func<HttpClient,ValueTask>( this.InvokeTest);
                 tasks.Add(Task.Run(async () =>
                {
                    using (var client = new HttpClient())
